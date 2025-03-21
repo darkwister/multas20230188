@@ -7,6 +7,9 @@ import { MultaService } from '../services/multa.service';
 import { Multa } from '../classes/multa';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { RecordingData, VoiceRecorder } from 'capacitor-voice-recorder';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
@@ -21,8 +24,11 @@ export class Tab1Page implements OnInit, AfterViewInit {
   private marker: L.Marker | undefined; 
   public ubicacion: string = '';
   loading?: boolean;
+  public imageUrl: string | undefined;
+  public audioUrl: string | undefined;
+  public grabando: boolean = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private multaService: MultaService) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private multaService: MultaService, private router: Router) {}
 
   ngOnInit() {
     this.multaForm = this.fb.group({
@@ -116,10 +122,11 @@ export class Tab1Page implements OnInit, AfterViewInit {
       tipoInfraccion: this.multaForm.value.tipoInfraccion,
       descripcion: this.multaForm.value.descripcion,
       fechaHora: this.multaForm.value.fechaHora,
-      ubicacion: this.multaForm.value.ubicacion
+      ubicacion: this.multaForm.value.ubicacion,
+      imagen: this.multaForm.value.imagen,
+      audio: this.multaForm.value.audio,
     };
   
-    // Verifica si la ubicación está asignada
     if (!nuevaMulta.ubicacion) {
       alert('La ubicación es requerida para registrar la multa.');
       return;
@@ -127,6 +134,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
   
     await this.multaService.guardarMulta(nuevaMulta);
     console.log('Multa registrada:', nuevaMulta);
+    this.router.navigate(['tabs/tab2']);
   }
   
   loadMap() {
@@ -149,24 +157,57 @@ export class Tab1Page implements OnInit, AfterViewInit {
         this.marker.remove();
       }
   
-      // Crear el customIcon
       const customIcon = L.icon({
-        iconUrl: 'assets/marker-icon.png', // Ruta del icono personalizado
-        shadowUrl: 'assets/marker-shadow.png', // Ruta de la sombra del icono (si deseas usarla)
-        iconSize: [25, 41], // Tamaño del icono
-        iconAnchor: [12, 41], // Punto de anclaje del icono (ubicación del marcador)
-        popupAnchor: [1, -34], // Punto del popup respecto al icono
-        shadowSize: [41, 41] // Tamaño de la sombra
+        iconUrl: 'assets/marker-icon.png', 
+        shadowUrl: 'assets/marker-shadow.png', 
+        iconSize: [25, 41],
+        iconAnchor: [12, 41], 
+        popupAnchor: [1, -34], 
+        shadowSize: [41, 41] 
       });
   
-      // Agregar el marcador con el customIcon
       this.marker = L.marker([latLng.lat, latLng.lng], { icon: customIcon }).addTo(this.map);
       
-      // Asignar la ubicación al formulario
       this.ubicacion = `${latLng.lat}, ${latLng.lng}`;
       this.multaForm.patchValue({ ubicacion: this.ubicacion });
     } else {
       console.error('Error: No se pudo obtener latLng del evento de clic.');
+    }
+  }
+  async tomarFoto() {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Base64, 
+      source: CameraSource.Camera,
+    });
+  
+    if (image.base64String) {
+      this.imageUrl = `data:image/jpeg;base64,${image.base64String}`;
+      this.multaForm.patchValue({ imagen: this.imageUrl });
+    }
+  }
+
+  async iniciarGrabacion() {
+    const permission = await VoiceRecorder.requestAudioRecordingPermission();
+    if (!permission.value) {
+      alert('Permiso de grabación denegado');
+      return;
+    }
+    this.grabando = true;
+    await VoiceRecorder.startRecording();
+  }
+
+  async detenerGrabacion() {
+    const result: RecordingData = await VoiceRecorder.stopRecording();
+    this.grabando = false;
+
+    if (result.value && result.value.recordDataBase64) {
+      this.audioUrl = `data:audio/aac;base64,${result.value.recordDataBase64}`;
+      this.multaForm.patchValue({ audio: this.audioUrl });
+      console.log('Audio guardado:', this.audioUrl);
+    } else {
+      console.error('Error al obtener la grabación de audio');
     }
   }
 }

@@ -16,39 +16,32 @@
 
   <form [formGroup]="multaForm" (ngSubmit)="registrarMulta()">
     <ion-item>
-      <ion-label position="floating">Código de Marbete</ion-label>
-      <ion-input formControlName="codigoMarbete"></ion-input>
+      <ion-input label="Código de Marbete" labelPlacement="floating" formControlName="codigoMarbete"></ion-input>
       <ion-button (click)="buscarVehiculo()" [disabled]="loading" expand="full">Buscar</ion-button>
     </ion-item>
 
     <ion-item>
-      <ion-label>Marca</ion-label>
-      <ion-input formControlName="marca" [readonly]="!multaForm.get('marca')?.enabled"></ion-input>
+      <ion-input label="Marca" labelPlacement="fixed"  formControlName="marca" [readonly]="!multaForm.get('marca')?.enabled"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Modelo</ion-label>
-      <ion-input formControlName="modelo" [readonly]="!multaForm.get('modelo')?.enabled"></ion-input>
+      <ion-input label="Modelo" labelPlacement="fixed" formControlName="modelo" [readonly]="!multaForm.get('modelo')?.enabled"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Color</ion-label>
-      <ion-input formControlName="color" [readonly]="!multaForm.get('color')?.enabled"></ion-input>
+      <ion-input label="Color" labelPlacement="fixed" formControlName="color" [readonly]="!multaForm.get('color')?.enabled"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Año</ion-label>
-      <ion-input formControlName="anio" [readonly]="!multaForm.get('anio')?.enabled"></ion-input>
+      <ion-input label="Año" labelPlacement="fixed" formControlName="anio" [readonly]="!multaForm.get('anio')?.enabled"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Placa</ion-label>
-      <ion-input formControlName="placa" [readonly]="!multaForm.get('placa')?.enabled"></ion-input>
+      <ion-input label="Placa" labelPlacement="fixed" formControlName="placa" [readonly]="!multaForm.get('placa')?.enabled"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Tipo de Infracción</ion-label>
-      <ion-select formControlName="tipoInfraccion">
+      <ion-select label="Tipo de Infracción" expand="full" formControlName="tipoInfraccion">
         <ion-select-option *ngFor="let tipo of tiposInfraccion" [value]="tipo">
           {{ tipo }}
         </ion-select-option>
@@ -65,11 +58,18 @@
       <ion-datetime
         formControlName="fechaHora"
         displayFormat="YYYY-MM-DDTHH:mm"
-        min="2023-01-01T00:00"
+        min="2021-01-01T00:00"
         max="2025-12-31T23:59"
       ></ion-datetime>
     </ion-item>
 
+    <ion-button type="button" expand="full" (click)="tomarFoto()">Tomar Foto</ion-button>
+    <img *ngIf="imageUrl" [src]="imageUrl" alt="Foto de la multa" style="width: 100px;">
+
+    <ion-button type="button" expand="full" (click)="iniciarGrabacion()" *ngIf="!grabando">Iniciar Grabación</ion-button>
+    <ion-button type="button" expand="full" (click)="detenerGrabacion()" *ngIf="grabando">Detener Grabación</ion-button>
+
+    <audio *ngIf="audioUrl" [src]="audioUrl" controls></audio>   
     <div id="map" style="height: 400px; width: 100%;"></div>
 
     <ion-button type="submit" expand="full" [disabled]="!multaForm.valid">Registrar Multa</ion-button>
