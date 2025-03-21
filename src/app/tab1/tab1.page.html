@@ -1,17 +1,77 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Registro de Multas
     </ion-title>
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">Registro de multas</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <form [formGroup]="multaForm" (ngSubmit)="registrarMulta()">
+    <ion-item>
+      <ion-label position="floating">Código de Marbete</ion-label>
+      <ion-input formControlName="codigoMarbete"></ion-input>
+      <ion-button (click)="buscarVehiculo()" [disabled]="loading" expand="full">Buscar</ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Marca</ion-label>
+      <ion-input formControlName="marca" [readonly]="!multaForm.get('marca')?.enabled"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Modelo</ion-label>
+      <ion-input formControlName="modelo" [readonly]="!multaForm.get('modelo')?.enabled"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Color</ion-label>
+      <ion-input formControlName="color" [readonly]="!multaForm.get('color')?.enabled"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Año</ion-label>
+      <ion-input formControlName="anio" [readonly]="!multaForm.get('anio')?.enabled"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Placa</ion-label>
+      <ion-input formControlName="placa" [readonly]="!multaForm.get('placa')?.enabled"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tipo de Infracción</ion-label>
+      <ion-select formControlName="tipoInfraccion">
+        <ion-select-option *ngFor="let tipo of tiposInfraccion" [value]="tipo">
+          {{ tipo }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-textarea formControlName="descripcion"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Fecha y Hora</ion-label>
+      <ion-datetime
+        formControlName="fechaHora"
+        displayFormat="YYYY-MM-DDTHH:mm"
+        min="2023-01-01T00:00"
+        max="2025-12-31T23:59"
+      ></ion-datetime>
+    </ion-item>
+
+    <div id="map" style="height: 400px; width: 100%;"></div>
+
+    <ion-button type="submit" expand="full" [disabled]="!multaForm.valid">Registrar Multa</ion-button>
+  </form>
 </ion-content>
