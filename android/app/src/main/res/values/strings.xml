@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">multas20230188</string>
+    <string name="title_activity_main">multas20230188</string>
+    <string name="package_name">ionic.multas20230188</string>
+    <string name="custom_url_scheme">ionic.multas20230188</string>
+</resources>
