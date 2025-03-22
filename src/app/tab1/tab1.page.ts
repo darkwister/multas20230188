@@ -49,11 +49,11 @@ export class Tab1Page implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.loadMap();
-    if (this.map) {
-      console.log('Mapa cargado correctamente.');
-    } else {
-      console.error('Error: El mapa no se cargó correctamente.');
-    }
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+      }
+    }, 0); 
   }
 
   async buscarVehiculo() {

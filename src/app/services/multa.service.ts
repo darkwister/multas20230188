@@ -51,4 +51,9 @@ export class MultaService {
     await this._storage?.set('multas', nuevasMultas);
     this.multasSubject.next(nuevasMultas);
   }
+  async eliminarTodo() {
+    const multasBorradas: never[] = []
+    await this._storage?.set('multas', multasBorradas); 
+    this.multasSubject.next(multasBorradas);
+  }
 }
