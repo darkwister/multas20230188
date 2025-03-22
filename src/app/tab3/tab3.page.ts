@@ -10,3 +10,4 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonCardContent, I
 export class Tab3Page {
   constructor() {}
 }
+//Es simplmente el componente que contiene la informacion mia, no es necesario que se modifique

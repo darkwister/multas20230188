@@ -11,7 +11,7 @@ import { addCircle, eye, person } from 'ionicons/icons';
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
-
+  // Agregar los iconos a cada tab
   constructor() {
     addIcons({ addCircle, eye, person });
   }

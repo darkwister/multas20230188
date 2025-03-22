@@ -1,4 +1,5 @@
 export class Multa {
+    //Esta es la estructura de los datos, en base a los requerimientos suplidos
     constructor(
         public id?: number,
         public marbete?: string,

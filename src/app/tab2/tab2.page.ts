@@ -19,29 +19,29 @@ export class Tab2Page implements OnInit {
   private multasSubscription?: Subscription;
 
   constructor(private multaService: MultaService, private router: Router) {}
-
+  // Cargar las multas cuando se inicie el componente
   ngOnInit() {
     this.multasSubscription = this.multaService.multas$.subscribe(multas => {
       this.multas = multas;
     });
 
-    // Cargar las multas al inicio
     this.multaService.loadMultas();
   }
-
+  // Limpiar la suscripción al destruir el componente
   ngOnDestroy() {
     if (this.multasSubscription) {
       this.multasSubscription.unsubscribe();
     }
   }
-
+  // Navegar a la pantalla de detalles de la multa
   verDetalles(id: number) {
     this.router.navigate([`/detalle-multa/${id}`]);
   }
-
+  // Eliminar una multa
   async eliminarMulta(id: number) {
     await this.multaService.eliminarMulta(id);
   }
+  // Eliminar todas las multas existentes
   async eliminarTodo(){
     await this.multaService.eliminarTodo();
   }

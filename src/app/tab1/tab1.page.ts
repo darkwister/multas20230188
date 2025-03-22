@@ -29,7 +29,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
   public grabando: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private multaService: MultaService, private router: Router) {}
-
+  // Inicializar el formulario
   ngOnInit() {
     this.multaForm = this.fb.group({
       codigoMarbete: ['', Validators.required],
@@ -46,7 +46,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
       audio: ['']
     });
   }
-
+  // Cargar el mapa en el tamaño de la pantalla
   ngAfterViewInit() {
     this.loadMap();
     setTimeout(() => {
@@ -68,7 +68,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
         if (data && data.ok === 1) {
           console.log('Vehiculo encontrado:', data);
   
-          // Actualizar los valores del formulario con los datos obtenidos de la API
+          // Actualizar los valores del formulario con los datos obtenidos de la API de el marbete
           this.multaForm.patchValue({
             marca: data.marca || '',
             modelo: data.modelo || '',
@@ -96,7 +96,8 @@ export class Tab1Page implements OnInit, AfterViewInit {
       }
     );
   }  
-    async registrarMulta() {
+  //Metodo para registrar la multa
+  async registrarMulta() {
     if (!this.multaForm.valid) {
       return;
     }
@@ -136,7 +137,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
     console.log('Multa registrada:', nuevaMulta);
     this.router.navigate(['tabs/tab2']);
   }
-  
+  // Metodo para cargar el mapa, se llama en el ngAfterViewInit
   loadMap() {
     this.map = L.map('map').setView([18.7357, -70.1627], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -147,7 +148,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
 
     this.map.invalidateSize();
   }
-
+  // Metodo para manejar el evento de clic en el mapa, para obtener la ubicacion
   onMapClick(e: L.LeafletMouseEvent) {
     if (e && e.latlng && e.latlng.lat !== undefined && e.latlng.lng !== undefined) {
       const latLng = e.latlng;
@@ -174,6 +175,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
       console.error('Error: No se pudo obtener latLng del evento de clic.');
     }
   }
+  // Metodo para tomar una foto, usa el capacitor par tomar la foto, dependiendo del dispositivo en uso
   async tomarFoto() {
     const image = await Camera.getPhoto({
       quality: 90,
@@ -187,7 +189,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
       this.multaForm.patchValue({ imagen: this.imageUrl });
     }
   }
-
+  // Metodo para iniciar la grabacion, lo saca en formato base64
   async iniciarGrabacion() {
     const permission = await VoiceRecorder.requestAudioRecordingPermission();
     if (!permission.value) {
@@ -197,7 +199,7 @@ export class Tab1Page implements OnInit, AfterViewInit {
     this.grabando = true;
     await VoiceRecorder.startRecording();
   }
-
+  // Metodo para detener la grabacion y guardar el audio
   async detenerGrabacion() {
     const result: RecordingData = await VoiceRecorder.stopRecording();
     this.grabando = false;
