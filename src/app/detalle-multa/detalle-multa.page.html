@@ -1,13 +1,43 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>detalle-multa</ion-title>
+    <ion-title>Detalle Multa</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">detalle-multa</ion-title>
+      <ion-title size="large">Detalle Multa</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-card *ngIf="multa">
+    <ion-img [src]="multa.imagen"></ion-img>
+    <ion-card-header>
+      <ion-card-title>{{ multa.marbete }}</ion-card-title>
+      <ion-card-subtitle>{{ multa.tipoInfraccion }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="primary">
+        <h1>{{ multa.descripcion }}</h1>
+        <p>{{ multa.fechaHora }}</p>
+      </ion-text>
+      <ion-text>
+        <p>Detalles del vehiculo</p>
+        <p>Marca: {{ multa.marca }}</p>
+        <p>Modelo: {{ multa.modelo }}</p>
+        <p>Color: {{ multa.color }}</p>
+        <p>Año: {{ multa.anio }}</p>
+        <p>Placa: {{ multa.placa }}</p>
+      </ion-text>
+
+      <ion-item *ngIf="multa.audio">
+        <ion-label>Audio de la multa</ion-label>
+        <ion-button (click)="reproducirAudio(multa.audio)">Reproducir</ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <div id="map" style="height: 300px;"></div>
 </ion-content>
