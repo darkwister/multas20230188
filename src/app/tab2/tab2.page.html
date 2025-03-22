@@ -5,11 +5,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-item-sliding  *ngFor="let multa of this.multas">
+  <ion-list *ngIf="this.multas.length > 0">
+    <ion-item-sliding *ngFor="let multa of this.multas">
       <ion-item>
         <ion-thumbnail slot="start">
-          <ion-img [src]="multa.imagen || 'https://ionicframework.com/docs/img/demos/thumbnail.svg'"></ion-img>
+          <ion-img [src]="multa.imagen || 'https://ionicframework.com/docs/img/demos/thumbnail.svg'"/>
         </ion-thumbnail>
         <ion-label>
           <h2>Marbete: {{ multa.marbete }}</h2>
@@ -24,4 +24,8 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  <ion-button (click)="eliminarTodo()" color="danger" expand="full">
+    <ion-icon slot="start" name="trash-bin"></ion-icon>
+    ELIMINAR TODO
+  </ion-button>
 </ion-content>

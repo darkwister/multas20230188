@@ -21,7 +21,7 @@ export class DetalleMultaPage implements OnInit {
   public map!: L.Map;
 
   constructor(private multaService: MultaService, private router: ActivatedRoute) { }
-
+  //Recibe como parametro el id de la multa a mostrar los detalles
   async ngOnInit() {
     if (!this.multa) {
       const id = this.router.snapshot.paramMap.get('id');
@@ -32,6 +32,16 @@ export class DetalleMultaPage implements OnInit {
       }
     }
   }
+  // metodo para cargar el mapa en el tamaño de la pantalla
+  ngAfterViewInit() {
+    this.loadMap();
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+      }
+    }, 0); 
+  }
+  // Metodo para cargar el mapa con la ubicacion de la multa
   loadMap() {
     if (!this.multa?.ubicacion) return;
   
@@ -44,7 +54,7 @@ export class DetalleMultaPage implements OnInit {
         attribution: '© OpenStreetMap contributors'
       }).addTo(this.map);
     } else {
-      // Si el mapa ya existe, solo actualizamos la vista
+    // Si el mapa ya existe, solo actualizamos la vista
       this.map.setView([lat, lng], 15);
     } 
     const customIcon = L.icon({
@@ -65,7 +75,7 @@ export class DetalleMultaPage implements OnInit {
   // Método para reproducir el audio
   reproducirAudio(audioBase64: string) {
     const audio = new Audio();
-    // Establecer la fuente del audio en base64
+    // Establecer la fuente del audio en base64, esto permite reproducir el audio sin la necesidad de un servidor
     audio.src = audioBase64;
     // Reproducir el audio
     audio.play().catch((error) => {
